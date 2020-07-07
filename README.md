@@ -26,6 +26,10 @@ docker-compose exec kafka bash -c "echo 'test message' | kafka-console-producer 
 docker-compose exec kafka kafka-console-consumer --bootstrap-server kafka:9092 --topic my-topic --from-beginning --max-messages 1
 ```
 
+## Kafka Control Center
+
+Available at http://localhost:9021
+
 ## REST Proxy examples
 
 Full API at https://docs.confluent.io/current/kafka-rest/api.html

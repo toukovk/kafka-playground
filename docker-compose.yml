@@ -42,3 +42,19 @@ services:
       KAFKA_REST_LISTENERS: http://0.0.0.0:8082
       KAFKA_REST_SCHEMA_REGISTRY_URL: http://registry:8081
       KAFKA_REST_HOST_NAME: rest-proxy
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:5.5.0
+    depends_on:
+      - zookeeper
+      - kafka
+      - registry
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: kafka:9092
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_STREAMS_NUM_STREAM_THREADS: 2
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://registry:8081"
