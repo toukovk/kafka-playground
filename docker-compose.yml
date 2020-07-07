@@ -19,3 +19,13 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       # NOTE: PLAINTEXT not for real-data usage
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+  registry:
+    image: confluentinc/cp-schema-registry:5.5.0
+    depends_on:
+      - zookeeper
+      - kafka
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
