@@ -74,3 +74,74 @@ curl -XPOST \
 curl -H "Accept: application/vnd.kafka.json.v2+json" \
      http://localhost:8082/consumers/my-consumer-group/instances/my-consumer-instance/records | jq "."
 ```
+
+## KSQLDB examples
+
+Start KSQLDB CLI
+
+```
+docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088
+```
+
+Read metadata:
+
+```
+ksql> SHOW STREAMS;
+ksql> SHOW TOPICS;
+```
+
+Create a stream (backed by a new Kafka topic `myevents`)
+
+```
+ksql> CREATE STREAM myEvents (userId VARCHAR, type INTEGER)
+  WITH (kafka_topic='myevents', value_format='json', partitions=1);
+```
+
+Run a continuous query in CLI
+
+```
+ksql> SELECT * FROM myEvents 
+  EMIT CHANGES;
+```
+
+Write messages to a stream:
+
+```
+ksql> INSERT INTO myEvents (userId, type) VALUES ('user1', 1);
+ksql> INSERT INTO myEvents (userId, type) VALUES ('user1', 4);
+ksql> INSERT INTO myEvents (userId, type) VALUES ('user2', 2);
+ksql> INSERT INTO myEvents (userId, type) VALUES ('user2', 5);
+```
+
+### Creating derived streams (transformations)
+
+First, configure ksqldb to consume topic from the beginning:
+
+```
+ksql> SET 'auto.offset.reset' = 'earliest';
+```
+
+Create a derived stream (stateless filtering, creates also a Kafka topic):
+
+```
+ksql> CREATE STREAM myOddTypeEvents AS
+  SELECT userId, type
+  FROM myEvents
+  WHERE type % 2 = 1
+  EMIT CHANGES;
+```
+
+Create a stateful stream
+
+```
+ksql> CREATE TABLE eventCountByType AS
+  SELECT type, COUNT(*) AS count
+  FROM myEvents
+  GROUP BY type
+  EMIT CHANGES;
+```
+
+### Further links:
+
+* Examples: https://ksqldb.io/examples.html
+* Developer guide: https://docs.ksqldb.io/en/latest/developer-guide/
