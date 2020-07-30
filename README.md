@@ -1,4 +1,10 @@
-Start
+A Docker Compose setup with some examples for easily trying out locally various Kafka related services, in order to get hands-on feeling on the tools & APIs.
+
+NOTE that the setup & configuration is not suitable for actual usage.
+
+If you're interested in event-driven architectures & Kafka, I recommend reading [Designing Event-Driven Systems (Ben Stepford)](http://www.benstopford.com/2018/04/27/book-designing-event-driven-systems/) (ebook freely available)
+
+## Start the environment
 
 ```
 docker-compose up -d
@@ -141,7 +147,13 @@ ksql> CREATE TABLE eventCountByType AS
   EMIT CHANGES;
 ```
 
-### Further links:
+### Further KSQLDB links:
 
 * Examples: https://ksqldb.io/examples.html
 * Developer guide: https://docs.ksqldb.io/en/latest/developer-guide/
+
+## TODOs
+
+* Kafka Connect
+* Kafka Streams
+* Some example setup
