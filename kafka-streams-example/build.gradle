@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+  mavenCentral()
+}
+
+task execute(type: JavaExec) {
+    main = project.hasProperty('main') ? project.getProperty('main') : 'null'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+dependencies {
+    compile 'org.apache.kafka:kafka-streams:1.0.2'
+    compile 'org.apache.kafka:kafka-clients:1.0.2'
+}

@@ -152,8 +152,34 @@ ksql> CREATE TABLE eventCountByType AS
 * Examples: https://ksqldb.io/examples.html
 * Developer guide: https://docs.ksqldb.io/en/latest/developer-guide/
 
+## Kafka Streams example
+
+kafka-streams-example directory contains a simple Kafka Streams example doing stateless mapping with filtering from a topic to another.
+
+Create topics:
+
+```
+docker-compose exec kafka kafka-topics --create --topic string-topic --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181
+docker-compose exec kafka kafka-topics --create --topic string-length-topic --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181
+```
+
+Start Kafka Streams example:
+
+```
+docker-compose run kafka-streams-runner gradle --no-daemon -Pmain=examples.KafkaStreamsExample execute
+```
+
+Write a couple of messages to input topic & verify output topic:
+
+```
+docker-compose exec kafka bash -c "echo 'test message' | kafka-console-producer --request-required-acks 1 --broker-list kafka:9092 --topic string-topic"
+docker-compose exec kafka bash -c "echo 'te' | kafka-console-producer --request-required-acks 1 --broker-list kafka:9092 --topic string-topic"
+docker-compose exec kafka bash -c "echo 'somewhat longer test message' | kafka-console-producer --request-required-acks 1 --broker-list kafka:9092 --topic string-topic"
+
+docker-compose exec kafka kafka-console-consumer --bootstrap-server kafka:9092 --topic string-length-topic --from-beginning --max-messages 10
+```
+
 ## TODOs
 
 * Kafka Connect
-* Kafka Streams
 * Some example setup

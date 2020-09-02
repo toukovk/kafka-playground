@@ -87,3 +87,14 @@ services:
       - ksqldb-server
     entrypoint: /bin/sh
     tty: true
+
+  kafka-streams-runner:
+    image: gradle:6.6
+    working_dir: /project
+    volumes:
+      - ./kafka-streams-example:/project
+      # Gradle cache as a volume to make subsequent runs faster if iterating
+      - gradle-cache:/home/gradle/.gradle
+
+volumes:
+  gradle-cache:
